@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "name": "task-management-api",
+  "version": "1.0.0",
+  "description": "Simple task manager where user can use CRUD features to handle their tasks. API practice for me.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MmwAggie/Task-Management-API.git"
+  },
+  "keywords": [
+    "practice",
+    "api",
+    "backend",
+    "frontend"
+  ],
+  "author": "Makell Williams",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MmwAggie/Task-Management-API/issues"
+  },
+  "homepage": "https://github.com/MmwAggie/Task-Management-API#readme"
+}
