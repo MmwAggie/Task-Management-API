@@ -1,0 +1,4 @@
+Here's where I'll put any bugs or issues I run into, as well as the solutions/fixes, over the course of working on this project.
+
+
+

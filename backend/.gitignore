@@ -2,5 +2,8 @@
 # Ignore .env files
 .env 
 
+# Ignore sql files
+*.sql
+
 # Ignore node_modules folder
 node_modules/

@@ -1,0 +1,1 @@
+Logic for endpoints, mostly gonna be async functions for requests and responses.

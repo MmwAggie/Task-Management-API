@@ -1,0 +1,1 @@
+Handles authorization and errors.
