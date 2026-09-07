@@ -1,1 +1,1 @@
-Handles authorization and errors.
+Reusable functions called before controller features run.

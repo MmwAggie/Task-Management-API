@@ -1,1 +1,1 @@
-Configuration settings for the database.
+Configuration settings for database connection and environmental variables.

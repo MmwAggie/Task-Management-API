@@ -1,4 +1,10 @@
 Here's where I'll put any bugs or issues I run into, as well as the solutions/fixes, over the course of working on this project.
 
+(FIXED) 1. Error with Node js passing client password as something that isn't a string. I think the issue here is just the way I calling the environment variables, hopefully a quick fix.
+It turns out the problem is simply the connection script and the env file being in different directories is the cause of the issues, since the dotenv can't locate the needed environment variables.
 
+The fix was simple, I just had to move the .env file to the root directory, because that's where dotenv looks for that at. Didn't even mean to put .env in the backend folder, whoops.
+
+
+2. Error with trying to get the host to be found. Not quite sure how this happened, but apparently my localhost isn't the correct name for what's hosting the server for some reason.
 
