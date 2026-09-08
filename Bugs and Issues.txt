@@ -6,5 +6,9 @@ It turns out the problem is simply the connection script and the env file being 
 The fix was simple, I just had to move the .env file to the root directory, because that's where dotenv looks for that at. Didn't even mean to put .env in the backend folder, whoops.
 
 
-2. Error with trying to get the host to be found. Not quite sure how this happened, but apparently my localhost isn't the correct name for what's hosting the server for some reason.
+(FIXED) 2. Error with trying to get the host to be found. Not quite sure how this happened, but apparently my localhost isn't the correct name for what's hosting the server for some reason.
+TURNS OUT THE SEMICOLONS IN THE .env WERE THE THINGS CAUSING THE ISSUE. DIDN'T KNOW THAT COULD EVEN CAUSE A PROBLEM?! Dang, I feel really stupid after all this troubleshooting for this issue.
+Lesson learned, never use semicolons in an .env file, since it treats everything as a literal part of a value. So DB_PORT=1234; has a port value of 1234;, semicolon included.
+
+
 
