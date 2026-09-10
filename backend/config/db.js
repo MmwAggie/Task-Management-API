@@ -39,4 +39,5 @@ const client = await pool.connect(); // Create a client instance from the pool f
 const res = await client.query('SELECT NOW()'); // Execute a simple query to test the connection
 console.log("Database connection test result:", res.rows[0]); // Log the result of the test query
 
-export { pool }; // Export the pool instances for use in other parts of the application
+client.release(); // Release the client back to the pool
+export { pool, client }; // Export the pool instances for use in other parts of the application

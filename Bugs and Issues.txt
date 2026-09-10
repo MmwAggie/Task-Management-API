@@ -11,4 +11,9 @@ TURNS OUT THE SEMICOLONS IN THE .env WERE THE THINGS CAUSING THE ISSUE. DIDN'T K
 Lesson learned, never use semicolons in an .env file, since it treats everything as a literal part of a value. So DB_PORT=1234; has a port value of 1234;, semicolon included.
 
 
+(FIXED) 3. Had issues with trying to get index server going. The issue first stemmed from issues importing my pool instance from db.js. The file pathing just seems wrong but I'll fix it.
+Solution was exactly the what I said before, file path was just wrong for the import.
+
+(FIXED) 4. There were problems with the way the pool and client instances from db.js were exported, causing the server, index.js, to not be able to load the correct stuff.
+The fix took some time, but was simple, all I had to do was export the db.js modules pool and client and check over the import in index.js.
 

@@ -14,6 +14,7 @@
   "description": "Simple task manager where user can use CRUD features to handle their tasks. API practice for me.",
   "main": "app.js",
   "scripts": {
+    "dev": "npx nodemon ./backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
