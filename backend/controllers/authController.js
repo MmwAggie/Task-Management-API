@@ -30,11 +30,6 @@ export const registerUser = async (req, res) => { // Logic for registering a use
             [userName, hashedPassword]
         );
 
-        /// REMOVE THESE LATER
-        console.log('Inserted row keys:', Object.keys(newUser.rows[0])); // Temp console logs...
-        console.log('Inserted row values:', newUser.rows[0]);
-        /// REMOVE THESE LATER
-
         const token = jwt.sign( // Create a JWT token for the new user
             { id: newUser.rows[0].userID },
             process.env.JWT_SECRET,
