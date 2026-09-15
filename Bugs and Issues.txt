@@ -17,3 +17,6 @@ Solution was exactly the what I said before, file path was just wrong for the im
 (FIXED) 4. There were problems with the way the pool and client instances from db.js were exported, causing the server, index.js, to not be able to load the correct stuff.
 The fix took some time, but was simple, all I had to do was export the db.js modules pool and client and check over the import in index.js.
 
+
+(FIXED) 5. Had some issues with getting importing paths correct for most of the imports. Nothing too complicated, just have to work on my file pathing.
+Fix was pretty easy, just had to change the imports to use the appropriate pathing.

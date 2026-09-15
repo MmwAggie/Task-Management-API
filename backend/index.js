@@ -13,7 +13,7 @@ dotenv.config(); // Load environment variables from the .env file
 
 const app = express(); // Create our express app instance for use.
 app.use(express.json()) // Allow express to parse incoming JSON requests and make the data available in req.body
-app.use('api/auth', authRoutes);
+app.use('/api/auth', authRoutes); // Use the newly made auth routes.
 
 app.get('/api/health', async (req,res) => { // Simple health check endpoint to verify database connectivity
     try{

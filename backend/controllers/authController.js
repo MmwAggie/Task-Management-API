@@ -6,13 +6,13 @@ Makell Williams
 
 import bcrypt from 'bcrypt'; // Import the bcrypt module for hashing passwords
 import jwt from 'jsonwebtoken'; // Import jsonwebtoken for creating and verifying JWT tokens
-import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
+import { pool } from '../config/db.js'; // Import the database connection pool from the db.js file
 
 export const registerUser = async (req, res) => { // Logic for registering a user, including validation, password hashing, and token generation.
     const { userName, password } = req.body; // Destructure the userName and password from the request body
 
     if (!userName || !password) { // Check if either the userName or password is missing
-        return res.status(400).json({ message: 'userName and password are required' }); // Return a 400 Bad Request response if either is missing
+        return res.status(400).json({ message: 'Username and Password are required!!!' }); // Return a 400 Bad Request response if either is missing
     }
 
     try {
@@ -30,16 +30,25 @@ export const registerUser = async (req, res) => { // Logic for registering a use
             [userName, hashedPassword]
         );
 
+        /// REMOVE THESE LATER
+        console.log('Inserted row keys:', Object.keys(newUser.rows[0])); // Temp console logs...
+        console.log('Inserted row values:', newUser.rows[0]);
+        /// REMOVE THESE LATER
+
         const token = jwt.sign( // Create a JWT token for the new user
-            { id: newUser.rows[0].userid },
+            { id: newUser.rows[0].userID },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_ExPIRATION_TIME }
         );
 
+
         return res.status(201).json({
             message: 'User is registered!', // Return a 201 Created response with the new user's information and token
             token,
-            user: { userName: newUser.rows[0].userName }
+            user: { // Keep these properties lower case since Postgresql defaults to lower case for anything not in quotes, apparently.
+                id: newUser.rows[0].userid,
+                userName: newUser.rows[0].username
+            }
         });
     }
     catch (error) { // Catch any errors that occur during the registration process
@@ -52,7 +61,7 @@ export const loginUser = async (req, res) => { // Logic for logging in a user, i
     const { userName, password } = req.body; // Destructure the userName and password from the request body
 
     if (!userName || !password) { // Check if either the userName or password is missing
-        return res.status(400).json({ message: 'userName and password are required' }); // Return a 400 Bad Request response if either is missing
+        return res.status(400).json({ message: 'Username and Password are required!!!' }); // Return a 400 Bad Request response if either is missing
     }
 
     try {
@@ -60,13 +69,13 @@ export const loginUser = async (req, res) => { // Logic for logging in a user, i
         const user = result.rows[0]; // Get the user from the query result
 
         if (!user) { // If not found, return a 400 Bad Request response
-            return res.status(400).json({ message: 'Invalid userName or password' }); // Return a 400 Bad Request response if the user is not found
+            return res.status(400).json({ message: 'Invalid Username or Password!' }); // Return a 400 Bad Request response if the user is not found
         }
 
         const passMatch = await bcrypt.compare(password, user.password); // Compare the provided password with the hashed password in the database
 
         if (!passMatch) { // If the passwords do not match, return a 400 Bad Request response
-            return res.status(400).json({ message: 'Invalid userName or password' }); // Return a 400 Bad Request response if the password does not match
+            return res.status(400).json({ message: 'Invalid Username or Password!' }); // Return a 400 Bad Request response if the password does not match
         }
 
         const token = jwt.sign( // Generate a JWT token for the authenticated user
@@ -78,7 +87,8 @@ export const loginUser = async (req, res) => { // Logic for logging in a user, i
         return res.status(200).json({
             message: 'User logged in successfully!', // Return a 200 OK response with the user's information and token
             token,
-            user: { userName: user.userName }
+            user: { id: user.userid,
+                userName: user.username }
         });
     }
     catch (error) { // Catch any errors that occur during the login process
