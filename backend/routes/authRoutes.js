@@ -9,10 +9,8 @@ const router = express.Router(); // Create a new router instance to define our r
 
 import { registerUser, loginUser } from '../controllers/authController.js'; // Import the controller functions for user registration and login
 
-// Defines the route for user registration, mapping it to the registerUser controller function
-router.post('/register', registerUser);
+router.post('/register', registerUser); // Defines the route for user registration, mapping it to the registerUser controller function
 
-// Defines the route for user login, mapping it to the loginUser controller function
-router.post('/login', loginUser);
+router.post('/login', loginUser); // Defines the route for user login, mapping it to the loginUser controller function
 
 export default router; // Export the router instance to be used in other parts of the application

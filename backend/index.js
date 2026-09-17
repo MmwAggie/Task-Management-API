@@ -5,6 +5,7 @@ Makell Williams
 */
 
 import authRoutes from './routes/authRoutes.js'
+import taskRoutes from './routes/taskRoutes.js'
 import express from 'express'; // Import the express module for creating the server
 import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
 import dotenv from 'dotenv'; // Import the dotenv module to load environment variables
@@ -13,7 +14,9 @@ dotenv.config(); // Load environment variables from the .env file
 
 const app = express(); // Create our express app instance for use.
 app.use(express.json()) // Allow express to parse incoming JSON requests and make the data available in req.body
-app.use('/api/auth', authRoutes); // Use the newly made auth routes.
+app.use('/api/auth', authRoutes); // Use the auth routes to call routes and their respective controllers for users.
+app.use("/api/tasks", taskRoutes) // Use the task routes to call routes and their respective controllers for tasks.
+
 
 app.get('/api/health', async (req,res) => { // Simple health check endpoint to verify database connectivity
     try{
