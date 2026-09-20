@@ -4,8 +4,8 @@ September 4, 2026
 Makell Williams
 */
 
-import authRoutes from './routes/authRoutes.js'
-import taskRoutes from './routes/taskRoutes.js'
+import authRoutes from './routes/authRoutes.js'; // Import auth routes for authentication functions
+import taskRoutes from './routes/taskRoutes.js'; // Import task routes for task handling and manipulation functions.
 import express from 'express'; // Import the express module for creating the server
 import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
 import dotenv from 'dotenv'; // Import the dotenv module to load environment variables

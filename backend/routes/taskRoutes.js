@@ -8,7 +8,9 @@ import express from 'express'; // Import the express module for creating the ser
 const router = express.Router(); // Create a new router instance to define our routes
 
 import { createTask, getTask, deleteTask, updateTask } from '../controllers/taskControllers.js'; // Import the controller functions for user registration and login
+import { authenticateToken } from '../middleware/authMiddleware.js'; // Import the authentication middlewar for these task functions to be protected.
 
+router.use(authenticateToken); // Now use this middleware to protect the routes below.
 
 router.post('/', createTask); // Defines the route for task creation for a user. Mapped to the postTask function.
 router.get('/', getTask); // Defines the route to find user's tasks. Mapped to the getTask function.
