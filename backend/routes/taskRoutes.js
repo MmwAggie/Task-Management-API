@@ -15,4 +15,4 @@ router.get('/', getTask); // Defines the route to find user's tasks. Mapped to t
 router.put('/:id', updateTask); // Defines the route to update a user's tasks. Needs a task's specfic id. Mapped to the updateTask function.
 router.delete('/:id', deleteTask); // Defines the route to delete a user's tasks. Needs a task's specific id. Mapped to the deleteTask function.
 
-export default router;
+export default router; // Export the router so these routes can be used elsewhere.
