@@ -16,7 +16,7 @@ export const createTask = async (req, res) => { // Logic for creating a new task
         return res.status(400).json({ message: 'A title is needed for a task!!!' });
     }
 
-    const finalStatus = statusID || 2; // Get status that the user sent with the task, default to "in progress" if not selected.
+    const finalStatus = statusID || "in_progress"; // Get status that the user sent with the task, default to "in progress" if not selected.
 
     try { // Try to make a new task with the info sent from user request.
         const newTask = await pool.query(
@@ -99,15 +99,14 @@ export const updateTask = async (req, res) => { // Logic for updating an existin
 
     try {
         const editTask = await pool.query( // Update the tasks so that all parts will either stay the same or update to new stuff the user submitted.
-            `UPDATE tasks
-            SET
+            `UPDATE tasks SET
                 title = COALESCE($1, title),
                 description = COALESCE($2, description),
                 statusID = COALESCE($3, statusID),
-                updated_at = NOW(),
+                updated_at = NOW()
                 WHERE taskID = $4 AND userID = $5
                 RETURNING *
-                `,
+            `,
             [title, description, statusID, taskID, userID]
         );
 

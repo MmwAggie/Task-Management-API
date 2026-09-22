@@ -15,7 +15,7 @@ export const authenticateToken = (req, res, next) => { // Exported function that
 
     if (!token) { // If no token is found, user is denied access.
         return res.status(401).json({
-            message: "Access denied. Token was not provided!"
+            message: "Access denied since token was not provided!"
         })
     }
 

@@ -21,9 +21,9 @@ The fix took some time, but was simple, all I had to do was export the db.js mod
 (FIXED) 5. Had some issues with getting importing paths correct for most of the imports. Nothing too complicated, just have to work on my file pathing.
 Fix was pretty easy, just had to change the imports to use the appropriate pathing.
 
+(FIXED) 6. For some reason, my get task route isn't working correctly. I think it has something to do with the lack of a user id in the response. So I'll have to review the user login function to make sure that the id is being handled properly.
+Yep, the bug was just a simple use of the wrong variables. Used user.userName instead of user.userid. Whoops, simple oversight.
 
-
-
-
-
+(FIXED) 7. Another weird issue, but this time for a query. It seems like something is wrong with the query that's being ran in my edit tasks route. It seems simple to fix, but I'll need to figure out what to fix.
+Okay, it was really easy to fix. I added an unnecessary comma after the set un the update route, causing it to not work.
 
