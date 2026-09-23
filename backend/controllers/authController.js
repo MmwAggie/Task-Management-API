@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'; // Import the bcrypt module for hashing passwords
 import jwt from 'jsonwebtoken'; // Import jsonwebtoken for creating and verifying JWT tokens
 import { pool } from '../config/db.js'; // Import the database connection pool from the db.js file
 
-export const registerUser = async (req, res) => { // Logic for registering a user, including validation, password hashing, and token generation.
+export const registerUser = async (req, res, next) => { // Logic for registering a user, including validation, password hashing, and token generation.
     const { userName, password } = req.body; // Destructure the userName and password from the request body
 
     if (!userName || !password) { // Check if either the userName or password is missing
@@ -46,13 +46,12 @@ export const registerUser = async (req, res) => { // Logic for registering a use
             }
         });
     }
-    catch (error) { // Catch any errors that occur during the registration process
-        console.error('Error registering user:', error); // Log the error to the console for debugging
-        return res.status(500).json({ message: "Internal server error" }); // Return a 500 Internal Server Error response if something goes wrong
+    catch (error) { // Replaced with the global error catcher.
+        next(error)
     }
 };
 
-export const loginUser = async (req, res) => { // Logic for logging in a user, including validation, password comparison, and token generation.
+export const loginUser = async (req, res, next) => { // Logic for logging in a user, including validation, password comparison, and token generation.
     const { userName, password } = req.body; // Destructure the userName and password from the request body
 
     if (!userName || !password) { // Check if either the userName or password is missing
@@ -86,8 +85,7 @@ export const loginUser = async (req, res) => { // Logic for logging in a user, i
                 userName: user.username }
         });
     }
-    catch (error) { // Catch any errors that occur during the login process
-        console.error('Error logging in user:', error); // Log the error to the console for debugging
-        return res.status(500).json({ message: "Internal server error" }); // Return a 500 Internal Server Error response if something goes wrong
+    catch (error) { // Replaced with the global error catcher.
+        next(error);
     }
 };

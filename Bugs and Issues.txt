@@ -25,5 +25,5 @@ Fix was pretty easy, just had to change the imports to use the appropriate pathi
 Yep, the bug was just a simple use of the wrong variables. Used user.userName instead of user.userid. Whoops, simple oversight.
 
 (FIXED) 7. Another weird issue, but this time for a query. It seems like something is wrong with the query that's being ran in my edit tasks route. It seems simple to fix, but I'll need to figure out what to fix.
-Okay, it was really easy to fix. I added an unnecessary comma after the set un the update route, causing it to not work.
+Okay, it was really easy to fix. I added an unnecessary comma after the set un the update route, causing it to not work. Removed the comma, it works now.
 

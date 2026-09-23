@@ -4,11 +4,12 @@ September 4, 2026
 Makell Williams
 */
 
+import express from 'express'; // Import the express module for creating the server
+import dotenv from 'dotenv'; // Import the dotenv module to load environment variables
+import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
 import authRoutes from './routes/authRoutes.js'; // Import auth routes for authentication functions
 import taskRoutes from './routes/taskRoutes.js'; // Import task routes for task handling and manipulation functions.
-import express from 'express'; // Import the express module for creating the server
-import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
-import dotenv from 'dotenv'; // Import the dotenv module to load environment variables
+import { errorHandler } from './middleware/errorMiddleware.js'; // Import the global error handler to catch errors.
 
 dotenv.config(); // Load environment variables from the .env file
 
@@ -30,7 +31,7 @@ app.get('/api/health', async (req,res) => { // Simple health check endpoint to v
             database: process.env.DB_NAME,
             port: process.env.DB_PORT,
             timestamp: new Date().toISOString()
-        })
+        });
     }
 
     catch (err) { // Error catching block to handle any issues during the database connection or query execution
@@ -44,6 +45,14 @@ app.get('/api/health', async (req,res) => { // Simple health check endpoint to v
     }
 });
 
+app.use((req, res, next) => { // 404 Not Found Handler
+    const error = new Error(`Sorry, this route can't be found: ${req.originalUrl}`); // Make a new error for unknown requests.
+    res.status(404); // Respond with the status of 404.
+    next(error); // Pass this error to global error handler.
+});
+
+
+app.use(errorHandler) // Imported and using the global error handler. MUST BE THE LAST THING THE APP IS USING IN ORDER TO CATCH ERRORS PROPERLY.
 
 app.listen(process.env.PORT || 5000, () => { // Start the server and listen on the specified port from environment variables
     console.log(`Server is running on port ${process.env.PORT}! LET'S GO!`);

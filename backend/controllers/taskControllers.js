@@ -7,7 +7,7 @@ Makell Williams
 import { pool } from '../config/db.js'; // Import the database connection pool from the db.js file
 
 
-export const createTask = async (req, res) => { // Logic for creating a new task for a user
+export const createTask = async (req, res, next) => { // Logic for creating a new task for a user
     const { title, description, statusID } = req.body; // Info from request
 
     const userID = req.userID; // User id should be sent with the request since user is logged in.
@@ -32,15 +32,12 @@ export const createTask = async (req, res) => { // Logic for creating a new task
         });
     }
 
-    catch (error) { // Catch errors during these task creations
-        console.error('Error during task creation: ', error);
-        return res.status(500).json({
-            message: 'Internal server error, whoops...'
-        });
+    catch (error) { // Replaced with the global error catcher.
+        next(error);
     }
 }
 
-export const getTask = async (req, res) => { // Logic for getting a user's tasks.
+export const getTask = async (req, res, next) => { // Logic for getting a user's tasks.
     const userID = req.userID;
 
     try { // Try to select all tasks in the database that have a user id matching the current user's id.
@@ -55,15 +52,12 @@ export const getTask = async (req, res) => { // Logic for getting a user's tasks
         });
     }
 
-    catch (error) { // Catch errors and log it.
-        console.error('Error while trying to find tasks: ', error);
-        return res.status(500).json({
-            message: 'Internal server error, whoops...'
-        });
+    catch (error) { // Replaced with the global error catcher.
+        next(error)
     }
 }
 
-export const deleteTask = async (req, res) => { // Logic for creating deleting an existing task for a user
+export const deleteTask = async (req, res, next) => { // Logic for creating deleting an existing task for a user
     const userID = req.userID; // User id should be sent with the request since user is logged in.
     const taskID = req.params.id; // Task id should be sent with the request if user wants to update their task.
 
@@ -83,15 +77,12 @@ export const deleteTask = async (req, res) => { // Logic for creating deleting a
         });
     }
 
-    catch (error) { // Simple error catcher as ususal.
-        console.error('Error while trying to delete tasks: ', error);
-        return res.status(500).json({
-            message: 'Internal server error, whoops...'
-        });
+    catch (error) { // Replaced with the global error catcher.
+        next(error);
     }
 }
 
-export const updateTask = async (req, res) => { // Logic for updating an existing task for a user
+export const updateTask = async (req, res, next) => { // Logic for updating an existing task for a user
     const { title, description, statusID } = req.body; // Info from request
 
     const userID = req.userID; // User id should be sent with the request since user is logged in.
@@ -120,10 +111,7 @@ export const updateTask = async (req, res) => { // Logic for updating an existin
         });
     }
 
-    catch (error) { // Simple error catcher as ususal.
-        console.error('Error while trying to update user\'s task: ', error);
-        return res.status(500).json({
-            message: 'Internal server error, whoops...'
-        })
-    }
+    catch (error) { // Replaced with the global error catcher.
+        next(error);
+    };
 }
