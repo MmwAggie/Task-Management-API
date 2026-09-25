@@ -18,7 +18,7 @@ console.log("Password is:", process.env.DB_PASSWORD);
 console.log("Port is:", process.env.DB_PORT);
 
 
-const pool = new Pool ({ // Pool class with database connection configuration
+const pool = new Pool({ // Pool class with database connection configuration
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,

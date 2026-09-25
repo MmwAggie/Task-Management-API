@@ -19,9 +19,9 @@ app.use('/api/auth', authRoutes); // Use the auth routes to call routes and thei
 app.use("/api/tasks", taskRoutes) // Use the task routes to call routes and their respective controllers for tasks.
 
 
-app.get('/api/health', async (req,res) => { // Simple health check endpoint to verify database connectivity
-    try{
-        
+app.get('/api/health', async (req, res) => { // Simple health check endpoint to verify database connectivity
+    try {
+
         await pool.query('SELECT NOW()'); // Execute a simple query to test the connection, then release the client back to the pool
 
         res.status(200).json({
@@ -56,7 +56,7 @@ app.use(errorHandler) // Imported and using the global error handler. MUST BE TH
 
 app.listen(process.env.PORT || 5000, () => { // Start the server and listen on the specified port from environment variables
     console.log(`Server is running on port ${process.env.PORT}! LET'S GO!`);
-}) 
+})
 
 
 

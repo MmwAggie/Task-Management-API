@@ -9,12 +9,19 @@ const router = express.Router(); // Create a new router instance to define our r
 
 import { createTask, getTask, deleteTask, updateTask } from '../controllers/taskControllers.js'; // Import the controller functions for user registration and login
 import { authenticateToken } from '../middleware/authMiddleware.js'; // Import the authentication middlewar for these task functions to be protected.
+import { validateCreateTask, validateTaskIdParam } from '../middleware/validateTasks.js'; // Import task validation middleware, allowing for only sanitized, valid inputs.
 
-router.use(authenticateToken); // Now use this middleware to protect the routes below.
+router.use(authenticateToken); // Now use this middleware to protect the routes below. Will always run first to provide authentication and protection.
 
-router.post('/', createTask); // Defines the route for task creation for a user. Mapped to the postTask function.
+// Goes authenticateToken -> validateTaskIdParam -> createTask. If the task id param check fails task creation fails.
+router.post('/', validateCreateTask, createTask); // Defines the route for task creation for a user. Mapped to the postTask function. Now validates the various inputs for creating a task.
+
 router.get('/', getTask); // Defines the route to find user's tasks. Mapped to the getTask function.
-router.put('/:id', updateTask); // Defines the route to update a user's tasks. Needs a task's specfic id. Mapped to the updateTask function.
-router.delete('/:id', deleteTask); // Defines the route to delete a user's tasks. Needs a task's specific id. Mapped to the deleteTask function.
+
+// Goes authenticateToken -> validateTaskIdParam -> updateTask. If the task id param check fails task updating fails.
+router.put('/:id', validateTaskIdParam, updateTask); // Defines the route to update a user's tasks. Needs a task's specfic id. Mapped to the updateTask function. Now runs the task id validation check before updating a task.
+
+// Goes authenticateToken -> validateTaskIdParam -> deleteTask. If the task id param check fails task deletion fails.
+router.delete('/:id', validateTaskIdParam, deleteTask); // Defines the route to delete a user's tasks. Needs a task's specific id. Mapped to the deleteTask function. Now runs the task id validation check before deleting task.
 
 export default router; // Export the router so these routes can be used elsewhere.

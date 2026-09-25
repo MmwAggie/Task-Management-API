@@ -36,7 +36,6 @@ export const registerUser = async (req, res, next) => { // Logic for registering
             { expiresIn: process.env.JWT_ExPIRATION_TIME }
         );
 
-
         return res.status(201).json({
             message: 'User is registered!', // Return a 201 Created response with the new user's information and token
             token,
@@ -81,8 +80,10 @@ export const loginUser = async (req, res, next) => { // Logic for logging in a u
         return res.status(200).json({
             message: 'User logged in successfully!', // Return a 200 OK response with the user's information and token
             token,
-            user: { id: user.userid,
-                userName: user.username }
+            user: {
+                id: user.userid,
+                userName: user.username
+            }
         });
     }
     catch (error) { // Replaced with the global error catcher.
