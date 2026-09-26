@@ -9,7 +9,7 @@ const router = express.Router(); // Create a new router instance to define our r
 
 import { createTask, getTask, deleteTask, updateTask } from '../controllers/taskControllers.js'; // Import the controller functions for user registration and login
 import { authenticateToken } from '../middleware/authMiddleware.js'; // Import the authentication middlewar for these task functions to be protected.
-import { validateCreateTask, validateTaskIdParam } from '../middleware/validateTasks.js'; // Import task validation middleware, allowing for only sanitized, valid inputs.
+import { validateCreateTask, validateTaskIdParam, validateUpdateTask } from '../middleware/validateTasks.js'; // Import task validation middleware, allowing for only sanitized, valid inputs.
 
 router.use(authenticateToken); // Now use this middleware to protect the routes below. Will always run first to provide authentication and protection.
 
@@ -18,8 +18,8 @@ router.post('/', validateCreateTask, createTask); // Defines the route for task 
 
 router.get('/', getTask); // Defines the route to find user's tasks. Mapped to the getTask function.
 
-// Goes authenticateToken -> validateTaskIdParam -> updateTask. If the task id param check fails task updating fails.
-router.put('/:id', validateTaskIdParam, updateTask); // Defines the route to update a user's tasks. Needs a task's specfic id. Mapped to the updateTask function. Now runs the task id validation check before updating a task.
+// Goes authenticateToken -> validateTaskIdParam -> validateUpdateTask -> updateTask. If the task id param check fails task updating fails.
+router.put('/:id', validateTaskIdParam, validateUpdateTask, updateTask); // Defines the route to update a user's tasks. Needs a task's specfic id. Mapped to the updateTask function. Now runs the task id validation check before updating a task.
 
 // Goes authenticateToken -> validateTaskIdParam -> deleteTask. If the task id param check fails task deletion fails.
 router.delete('/:id', validateTaskIdParam, deleteTask); // Defines the route to delete a user's tasks. Needs a task's specific id. Mapped to the deleteTask function. Now runs the task id validation check before deleting task.
