@@ -5,6 +5,7 @@ Makell Williams
 */
 
 import express from 'express'; // Import the express module for creating the server
+import cors from 'cors'; // Import cross origin resource sharing, allowing for different ports to share stuff.
 import dotenv from 'dotenv'; // Import the dotenv module to load environment variables
 import { pool } from './config/db.js'; // Import the database connection pool from the db.js file
 import authRoutes from './routes/authRoutes.js'; // Import auth routes for authentication functions
@@ -14,6 +15,7 @@ import { errorHandler } from './middleware/errorMiddleware.js'; // Import the gl
 dotenv.config(); // Load environment variables from the .env file
 
 const app = express(); // Create our express app instance for use.
+app.use(cors())// Enables cross origin requests.
 app.use(express.json()) // Allow express to parse incoming JSON requests and make the data available in req.body
 app.use('/api/auth', authRoutes); // Use the auth routes to call routes and their respective controllers for users.
 app.use("/api/tasks", taskRoutes) // Use the task routes to call routes and their respective controllers for tasks.

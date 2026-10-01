@@ -17,7 +17,7 @@ console.log("Database is:", process.env.DB_NAME);
 console.log("Password is:", process.env.DB_PASSWORD);
 console.log("Port is:", process.env.DB_PORT);
 
-
+// Will utilize database pooling that way the constant request sent to a server won't crash it or make it laggy for users to use.
 const pool = new Pool({ // Pool class with database connection configuration
     user: process.env.DB_USER,
     host: process.env.DB_HOST,

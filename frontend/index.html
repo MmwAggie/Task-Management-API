@@ -1,0 +1,70 @@
+<!--
+This file will be the page that contains the forms for the various actions user can perform for my application.
+September 27, 2026
+Makell Williams
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"> <!--Using standard UTF 8 for character encoding here.-->
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <!--The visible area for the user is set to a 1.0 scale and will match the device width as needed.-->
+    <title>Task Manager API Client</title>
+    <link rel="stylesheet" href="style.css"> <!--Link the stylesheet up to this html page.-->
+</head>
+
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+
+        <!--Area for the authentication section-->
+        <div id="auth-section">
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form"> <!--Form for entering and submitting username and password.-->
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" id="auth-button">Sign In</button>
+            </form>
+            <!--Small area for selecting to make an account.-->
+            <p id="auth-button">Don't have an account?<a href="#" id="toggle-link">Register Here!</a></p>
+            <p id="auth-error" class="error-message"></p>
+        </div>
+
+        <!--Area for the task part of the dashboard, which should be hidden by default, since a user wouldn't be logged in. Will be made visible after login.-->
+        <div id="task-section" style="display: none;">
+            <div class="user-bar">
+                <span>Welcome</span>
+                <button id="logout-button">Logout</button>
+            </div>
+
+            <!--Area/form for task creation-->
+            <h3>Make A New Task</h3>
+            <form id="task-form">
+                <!--Task creation form, will have title, description and status for the task submitted here.-->
+                <input type="text" id="task-title" placeholder="Task Title (100 Chars max)" required>
+                <!--The required task title-->
+                <textarea id="task-description" placeholder="Task Description (Optional)"></textarea>
+                <!--The optional task description-->
+                <select id="task-status"> <!--Selection menu for the various task statuses.-->
+                    <option value="todo">To Do</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="finished">Finished</option>
+                    <option value="archived">Archived</option>
+                </select>
+                <button type="submit">Add Task</button> <!--Submission button to add a user's task.-->
+            </form>
+            <p id="task-error" class="error-message"></p> <!--Error message section-->
+
+            <h3>Your Task List</h3> <!--Where the tasks list will be displayed.-->
+            <div id="task-list"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script> <!--Link the javascript file for actual functionality to be added to this webpage.-->
+
+</body>
+
+</html>
