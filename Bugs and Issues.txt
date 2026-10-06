@@ -25,3 +25,10 @@ Yep, the bug was just a simple use of the wrong variables. Used user.userName in
 (FIXED) 7. Another weird issue, but this time for a query. It seems like something is wrong with the query that's being ran in my edit tasks route. It seems simple to fix, but I'll need to figure out what to fix.
 Okay, it was really easy to fix. I added an unnecessary comma after the set un the update route, causing it to not work. Removed the comma, it works now.
 
+(FIXED) 8. Had a small issue trying to use the route needed to load a user's task. It seems like something was wrong with it trying to load their tasks specifically, like the JWT was messed up or something.
+Figured it out, my helper function was a little messed up due to a typo, causing this small bug. Now with it fixed, the loading tasks function is working properly. I think I was also not using the helper function at first which was causing the issue as well, but it works now.
+
+
+
+
+
