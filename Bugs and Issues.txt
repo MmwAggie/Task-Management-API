@@ -28,7 +28,10 @@ Okay, it was really easy to fix. I added an unnecessary comma after the set un t
 (FIXED) 8. Had a small issue trying to use the route needed to load a user's task. It seems like something was wrong with it trying to load their tasks specifically, like the JWT was messed up or something.
 Figured it out, my helper function was a little messed up due to a typo, causing this small bug. Now with it fixed, the loading tasks function is working properly. I think I was also not using the helper function at first which was causing the issue as well, but it works now.
 
+(FIXED) 9. When a status is loaded on the webpage properly, the status loads as undefined instead of as a proper task status. I think there may be some kind of weird typo going on here causing this.
+Yep, just a minor typo, as expected. Gotta remember that postgresql doesn't care for capital letters.
 
+(FIXED) 10. When trying to add a task for a user, the task is created or added in any way. It seems like the page is refreshing before the creation can be completed.
+I fixed it, the bug was in the fetchWithAuth helper function, which had a typo causing the request to not get a proper response I believe. Essentially, everything was working fine,but the data being sent wasn't being handle correctly.
 
-
-
+(NEEDS FIXING) 11. Updating tasks has a big issue where it won't complete due to the database not having numbers correlating to each status. Because of this the status is never valid.

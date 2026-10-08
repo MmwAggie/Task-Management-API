@@ -28,10 +28,10 @@ async function fetchWithAuth(url, options = {}) { // Function that helps with au
     const headers = { // Header info for the response
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
-        ...options.headers // ... is being used to gather a varing number of elements/arguments from the options array.
+        ...options.headers // Being used to gather a varing number of elements/arguments from the options array.
     };
 
-    const response = await fetch(url, { options, headers }); // Wait to get the response.
+    const response = await fetch(url, { ...options, headers }); // Wait to get the response.
 
     if (response.status === 401 || response.status === 403) { // If the token is expired or invalid...
         localStorage.removeItem('authToken'); // ...remove the token from storage,...
@@ -71,7 +71,8 @@ authForm.addEventListener('submit', async (e) => { // Add an event listener to t
             document.getElementById('auth-section').style.display = 'none'; // Hide the authentication section once logged in.
             document.getElementById('task-section').style.display = 'block' // And display the task list section.
 
-            // TODO: Also make sure to load task here after loading the task section.
+            // Also make sure to load task here after loading the task section.
+            authForm.reset();
             loadTasks();
         }
 
@@ -86,9 +87,9 @@ authForm.addEventListener('submit', async (e) => { // Add an event listener to t
     }
 });
 
+const taskList = document.getElementById('task-list'); // List of tasks area that will be filled with user's tasks.
 
 async function loadTasks() { // This function will handle loading a user's tasks
-    const taskList = document.getElementById('task-list'); // List of tasks area that will be filled with user's tasks.
     taskList.innerHTML = '<p>Your tasks are loading...</p>';
 
     try {
@@ -108,14 +109,17 @@ async function loadTasks() { // This function will handle loading a user's tasks
             const taskCard = document.createElement('div');
             taskCard.className = 'task-card';
 
+            taskStatus = task.taskstatusid; // Using this status id, I can make them look better when rendered on the webpage.
+            // TODO: Make a switch case here for all 4 of the potential statuses. That way the rendered statuses look better.
+
             // The elements that make up the task cards.
             taskCard.innerHTML = ` 
             <h3>${task.title}</h3>
             <p>${task.description || 'No description'}</p>
-            <p><strong>Status:</strong> ${task.status_id || task.statusID}</p>
-            <button onclick='updateTasks('${task.title, task.description, task.status_id || task.statusID, task.id}')>Update</button>
-            <button onclick='deleteTask('${task.id}')>Delete</button>
-        `
+            <p><strong>Status: </strong>${task.status_id || task.statusid}</p>
+            <button class="update-button" data-id="${task.taskid}">Update</button>
+            <button class="delete-button" data-id="${task.taskid}">Delete</button>
+            `;
 
             taskList.appendChild(taskCard); // Append the task cards made to the list of tasks.
         });
@@ -126,3 +130,114 @@ async function loadTasks() { // This function will handle loading a user's tasks
         console.log('Failed to load tasks:', error);
     }
 }
+
+async function deleteTask(taskId) { // Function to delete tasks
+    if (!confirm("Do you want to delete this task?")) return; // Simple confirm to see if a user wants to delete the selected tasks or not.
+    try {
+        const response = await fetchWithAuth(`${API_URL}/tasks/${taskId}`, { // Get the delete task route ready.
+            method: 'DELETE' // Use the correct method.
+        });
+
+        if (response.ok) { // If everything is good, reload the user's task and the one selected to be deleted should be handled and gone.
+            loadTasks();
+        }
+
+        else { // Otherwise simple error message.
+            console.log("Failed to delete task.");
+        }
+    }
+
+    catch { // Catch any other random issues.
+        console.log("Error occured while deleting task: ", error)
+    }
+}
+
+async function updateTask(taskId) {
+    const newTitle = prompt("Put a new title");
+    if (!newTitle) return;
+
+    const newDescription = prompt("Put a new description");
+    const newStatusId = prompt("Enter status ID, 1 for To do, 2 for in progress, 3 for archived and 4 for finished.");
+
+    try {
+        const response = await fetchWithAuth(`${API_URL}/tasks/${taskId}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                title: newTitle,
+                description: newDescription,
+                statusID: parseInt(newStatusId, 10) || 1
+            })
+        });
+
+        if (response.ok) {
+            console.log("Task was updated successfully!");
+            loadTasks();
+        }
+
+        else {
+            const data = await response.json();
+            alert(data.message || "Failed to update task.")
+        }
+    }
+
+    catch (error) {
+        console.log("An error occured will updating task:", error);
+    }
+}
+
+taskList.addEventListener('click', async (e) => { // Listen out for button clicks in the task list.
+    if (e.target.classList.contains('delete-button')) { // See if a delete button in the task list was clicked.
+        const taskId = e.target.dataset.id; // Get the id from the clicked task.
+        await deleteTask(taskId); // Run the delete task function.
+    }
+
+    if (e.target.classList.contains('update-button')) { // See if a update button in the task list was clicked.
+        const taskId = e.target.dataset.id; // Get the id from the clicked task.
+        await updateTask(taskId); // Run the update task function.
+    }
+});
+
+const taskForm = document.getElementById('task-form'); // This is the section that will be used to submit tasks.
+const taskError = document.getElementById('task-error'); // Area that holds the error messages.
+
+taskForm.addEventListener('submit', async (e) => { // Event listener that will handle tasks creation.
+    e.preventDefault(); // Stop page reloads from happening on submission.
+
+    // The various parts of the task "needed" to submit it into a database.
+    const title = document.getElementById('task-title').value;
+    const description = document.getElementById('task-description').value;
+    const statusID = document.getElementById('task-status').value;
+
+    try { // Get a response from the create task route
+        const response = await fetchWithAuth(`${API_URL}/tasks`, {
+            method: 'POST',
+            body: JSON.stringify({ title, description, statusID })
+        });
+
+        const data = await response.json(); // The response data for this login request.
+
+        if (response.ok) { // Once it's okay, empty the form and error sections. Afterward, load the tasks again, now with the new task included.
+            taskForm.reset();
+            taskError.textContent = '';
+            loadTasks();
+        }
+
+        else { // Simple error catcher, will call the validateTask error messages when needed.
+            taskError.textContent = data.message || "Error creating task. Please try again!"
+        }
+    }
+
+    catch (error) {
+        console.error('An error occured during task creation:', error); // If a network error occurs display these messages.
+        taskError.textContent = "Network error while creating the task!"
+    }
+});
+
+const logOutButton = document.getElementById("logout-button");
+
+logOutButton.addEventListener('click', () => { // Simple log out feature.
+    localStorage.removeItem('authToken'); // Remove JWT, which will log out the user.
+    document.getElementById('auth-section').style.display = 'block'; // Show the login section again.
+    document.getElementById('task-section').style.display = 'none'; // Hide the task section from user.
+    console.log("Successfully logged out.");
+});
