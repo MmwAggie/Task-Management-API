@@ -46,15 +46,9 @@ async function fetchWithAuth(url, options = {}) { // Function that helps with au
 const API_URL = 'http://localhost:5000/api'; // Base API URL 
 
 const authForm = document.getElementById('auth-form'); // This section will need to change when user gets logged in.
+const authError = document.getElementById('auth-error'); // This section will change if an error occurs.
 
-authForm.addEventListener('submit', async (e) => { // Add an event listener to the authform for form submissions.
-    e.preventDefault() // Prevents page reloads from happening when the form  is submitted.
-
-    const authError = document.getElementById('auth-error'); // This section will change if an error occurs.
-
-    const username = document.getElementById('username').value; // Get the username entered
-    const password = document.getElementById('password').value; // Get the password entered
-
+async function loginUser(username, password) {
     try { // Try to send a request to login to the backend.
         const response = await fetch(`${API_URL}/auth/login`, { // Fetch the login route...
             method: 'POST', //...set the proper method...
@@ -73,6 +67,7 @@ authForm.addEventListener('submit', async (e) => { // Add an event listener to t
 
             // Also make sure to load task here after loading the task section.
             authForm.reset();
+            authError.innerText = '';
             loadTasks();
         }
 
@@ -84,6 +79,64 @@ authForm.addEventListener('submit', async (e) => { // Add an event listener to t
     catch (error) { // Normal error catcher
         console.error('A network error occured during authentication:', error); // If a network error occurs display these messages.
         authError.textContent = "Unable to connect to the server. Make sure Express application is running and try again!"
+    }
+}
+
+async function registerUser(username, password) { // Function registers users so they can become valid users.
+    const authForm = document.getElementById('auth-form'); // This section will need to change when user gets logged in.
+
+    try {
+        const response = await fetch(`${API_URL}/auth/register`, { // Use the register route.
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userName: username, password })
+        });
+
+        const data = response.json();
+
+        if (response.ok) {
+            console.log("Registration was successful!"); 
+
+            if (data.token) { // If all goes well, set the login token and make the page change.
+                localStorage.setItem('authToken', data.token);
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('task-section').style.display = 'block';
+                authForm.reset();
+                authError.innerText = '';
+                loadTasks();
+            }
+
+            else {
+                alert("Account successfully created! Please log in!"); // If not, the registration should still go through and allow the user to login.
+                authForm.reset();
+            }
+        }
+
+        else { // Else the registration is just a failure.
+            authError.textContent = data.message || "Fail to register user. Try a different username.";
+        }
+    }
+
+    catch (error) {
+        console.error("Error durring registration:", error);
+        authError.textContent = "Network error while registering user."
+    }
+}
+
+authForm.addEventListener('submit', async (e) => { // Add an event listener to the authform for form submissions for user login and registration.
+    e.preventDefault() // Prevents page reloads from happening when the form  is submitted.
+
+    const username = document.getElementById('username').value; // Get the username entered
+    const password = document.getElementById('password').value; // Get the password entered
+
+    const action = e.submitter ? e.submitter.id : '';
+
+    if (action === 'register-button'){
+        await registerUser(username.toLowerCase(), password);
+    }
+
+    else{
+        await loginUser(username.toLowerCase(), password);
     }
 });
 
@@ -109,14 +162,30 @@ async function loadTasks() { // This function will handle loading a user's tasks
             const taskCard = document.createElement('div');
             taskCard.className = 'task-card';
 
-            taskStatus = task.taskstatusid; // Using this status id, I can make them look better when rendered on the webpage.
-            // TODO: Make a switch case here for all 4 of the potential statuses. That way the rendered statuses look better.
+            const taskStatus = task.statusid; // Using this status id, I can make them look better when rendered on the webpage.
+            let statusName;
+
+            switch (taskStatus) { // A simple switch case for all the different statuses. This will show better text now.
+
+                case "todo":
+                    statusName = "To Do";
+                    break;
+                case "in_progress":
+                    statusName = "In Progress";
+                    break;
+                case "archived":
+                    statusName = "Archived";
+                    break;
+                case "finished":
+                    statusName = "Finished";
+                    break;
+            }
 
             // The elements that make up the task cards.
             taskCard.innerHTML = ` 
             <h3>${task.title}</h3>
             <p>${task.description || 'No description'}</p>
-            <p><strong>Status: </strong>${task.status_id || task.statusid}</p>
+            <p><strong>Status: </strong>${statusName}</p>
             <button class="update-button" data-id="${task.taskid}">Update</button>
             <button class="delete-button" data-id="${task.taskid}">Delete</button>
             `;
@@ -152,35 +221,35 @@ async function deleteTask(taskId) { // Function to delete tasks
     }
 }
 
-async function updateTask(taskId) {
-    const newTitle = prompt("Put a new title");
+async function updateTask(taskId) { // A bit of a weird function, but is used to update details about a selected task.
+    const newTitle = prompt("Put a new title"); // Will use simple prompts for this project
     if (!newTitle) return;
 
     const newDescription = prompt("Put a new description");
-    const newStatusId = prompt("Enter status ID, 1 for To do, 2 for in progress, 3 for archived and 4 for finished.");
+    const newStatusId = prompt("Enter status (e.g., todo, in_progress, archived, finished).");
 
-    try {
+    try { // Try to then update the different parts of the tasks.
         const response = await fetchWithAuth(`${API_URL}/tasks/${taskId}`, {
             method: 'PUT',
             body: JSON.stringify({
                 title: newTitle,
                 description: newDescription,
-                statusID: parseInt(newStatusId, 10) || 1
+                statusID: newStatusId ? newStatusId.trim() : "todo"
             })
         });
 
-        if (response.ok) {
+        if (response.ok) { // If all goes well, update the task.
             console.log("Task was updated successfully!");
             loadTasks();
         }
 
-        else {
+        else { // Else say it failed.
             const data = await response.json();
             alert(data.message || "Failed to update task.")
         }
     }
 
-    catch (error) {
+    catch (error) { // Another typical catch for errors.
         console.log("An error occured will updating task:", error);
     }
 }

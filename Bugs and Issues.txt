@@ -34,4 +34,5 @@ Yep, just a minor typo, as expected. Gotta remember that postgresql doesn't care
 (FIXED) 10. When trying to add a task for a user, the task is created or added in any way. It seems like the page is refreshing before the creation can be completed.
 I fixed it, the bug was in the fetchWithAuth helper function, which had a typo causing the request to not get a proper response I believe. Essentially, everything was working fine,but the data being sent wasn't being handle correctly.
 
-(NEEDS FIXING) 11. Updating tasks has a big issue where it won't complete due to the database not having numbers correlating to each status. Because of this the status is never valid.
+(FIXING) 11. Updating tasks has a big issue where it won't complete due to the database not having numbers correlating to each status. Because of this the status is never valid.
+Fixed the issue by just having the user enter the status that they want. If valid it's fine, else it won't accept. I need to redesign the way updating tasks works, because it feels a little janky and to picky for a good user experience.
