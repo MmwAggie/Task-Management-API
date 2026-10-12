@@ -95,7 +95,7 @@ async function registerUser(username, password) { // Function registers users so
         const data = response.json();
 
         if (response.ok) {
-            console.log("Registration was successful!"); 
+            console.log("Registration was successful!");
 
             if (data.token) { // If all goes well, set the login token and make the page change.
                 localStorage.setItem('authToken', data.token);
@@ -131,11 +131,11 @@ authForm.addEventListener('submit', async (e) => { // Add an event listener to t
 
     const action = e.submitter ? e.submitter.id : '';
 
-    if (action === 'register-button'){
+    if (action === 'register-button') {
         await registerUser(username.toLowerCase(), password);
     }
 
-    else{
+    else {
         await loginUser(username.toLowerCase(), password);
     }
 });
@@ -200,6 +200,56 @@ async function loadTasks() { // This function will handle loading a user's tasks
     }
 }
 
+// Various html elements that will be used when trying to update a task.
+const updateModal = document.getElementById('update-modal');
+const updateForm = document.getElementById('update-form');
+const cancelUpdateButton = document.getElementById('cancel-update');
+
+async function openUpdateModal(taskId, currentTitle, currentDescription, currentStatus) { // Function to open the modal menu and get the needed info to display.
+    // The elements of the task that will be needed for the modal.
+    document.getElementById('update-id').value = taskId;
+    document.getElementById('update-title').value = currentTitle;
+    document.getElementById('update-description').value = currentDescription;
+    document.getElementById('update-status').value = currentStatus;
+
+    updateModal.style.display = 'block'; // Now show the modal.
+}
+
+cancelUpdateButton.addEventListener('click', () => { // Simple event listener that hides the modal when clicking the cancel button
+    updateModal.style.display = 'none';
+});
+
+updateForm.addEventListener('submit', async(e) => { // Event listener that will handle task update form submissions
+    e.preventDefault(); // Prevent page reload on submissions.
+
+    // All the details of the tasks
+    const taskId = document.getElementById('update-id').value;
+    const title = document.getElementById('update-title').value;
+    const description = document.getElementById('update-description').value;
+    const statusID = document.getElementById('update-status').value; // Will now be gotten from the selection menu.
+
+    try {
+        const response = await fetchWithAuth(`${API_URL}/tasks/${taskId}`, { // Route for updating the tasks
+            method: 'PUT',
+            body: JSON.stringify({title, description, statusID})
+        });
+
+        if (response.ok){
+            updateModal.style.display = 'none'; // If all goes well, hide the modal.
+            loadTasks(); // Then reload/refresh the task after the update submission, showing the updated task.
+        }
+
+        else{ // Normal else if task update fails.
+            const data = await response.json();
+            alert(data.message || 'Failed to update task.');
+        }
+    }
+
+    catch (error){
+        console.error('Error update task:', error);
+    }
+});
+
 async function deleteTask(taskId) { // Function to delete tasks
     if (!confirm("Do you want to delete this task?")) return; // Simple confirm to see if a user wants to delete the selected tasks or not.
     try {
@@ -221,48 +271,23 @@ async function deleteTask(taskId) { // Function to delete tasks
     }
 }
 
-async function updateTask(taskId) { // A bit of a weird function, but is used to update details about a selected task.
-    const newTitle = prompt("Put a new title"); // Will use simple prompts for this project
-    if (!newTitle) return;
-
-    const newDescription = prompt("Put a new description");
-    const newStatusId = prompt("Enter status (e.g., todo, in_progress, archived, finished).");
-
-    try { // Try to then update the different parts of the tasks.
-        const response = await fetchWithAuth(`${API_URL}/tasks/${taskId}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                title: newTitle,
-                description: newDescription,
-                statusID: newStatusId ? newStatusId.trim() : "todo"
-            })
-        });
-
-        if (response.ok) { // If all goes well, update the task.
-            console.log("Task was updated successfully!");
-            loadTasks();
-        }
-
-        else { // Else say it failed.
-            const data = await response.json();
-            alert(data.message || "Failed to update task.")
-        }
-    }
-
-    catch (error) { // Another typical catch for errors.
-        console.log("An error occured will updating task:", error);
-    }
-}
-
 taskList.addEventListener('click', async (e) => { // Listen out for button clicks in the task list.
-    if (e.target.classList.contains('delete-button')) { // See if a delete button in the task list was clicked.
-        const taskId = e.target.dataset.id; // Get the id from the clicked task.
-        await deleteTask(taskId); // Run the delete task function.
+    const button = e.target.closest('[data-id]'); // Get the closet element to the selected button.
+    if (!button) return;
+
+    const taskId = button.dataset.id; // Get the id for the task that was selected.
+
+    if (button.classList.contains('delete-button')) { // If delete was selected, use task if to delete the task.
+        await deleteTask(taskId);
     }
 
-    if (e.target.classList.contains('update-button')) { // See if a update button in the task list was clicked.
-        const taskId = e.target.dataset.id; // Get the id from the clicked task.
-        await updateTask(taskId); // Run the update task function.
+    if (button.classList.contains('update-button')) { // If update was selected, get the various elements for updating the tasks.
+        const card = button.closest('.task-card');
+        const title = card.querySelector('h3').textContent;
+        const description = card.querySelector('p').textContent;
+        const status = button.dataset.status || 'todo';
+
+        openUpdateModal(taskId, title, description, status); // Open the modal menu with these found elements.
     }
 });
 

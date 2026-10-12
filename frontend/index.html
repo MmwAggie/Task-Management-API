@@ -57,6 +57,32 @@ Makell Williams
             </form>
             <p id="task-error" class="error-message"></p> <!--Error message section-->
 
+            <div id="update-modal" style="display: none;" class="modal"> <!--New modal menu for updating tasks-->
+                <div class="modal-content">
+                    <h3>Update Task</h3> <!--Make a form for submitting task updating information.-->
+                    <form id="update-form">
+                        <input type="hidden" id="update-id"> <!--Hide the task's id.-->
+
+                        <label for="update-title">Title:</label>
+                        <input type="text" id="update-title" required> <!--As ususal, get the title...-->
+
+                        <label for="update-description">Description:</label> <!--...get the description...-->
+                        <input type="text" id="update-description" required>
+
+                        <label for="update-status">Status:</label> <!--...and get the status.-->
+                        <select id="update-status" required> <!--Will now use a simple selection menu for updating statuses, being much better for selecting a valid status.-->
+                            <option value="todo">To Do</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="archived">Archived</option>
+                            <option value="finished">Finished</option>
+                        </select>
+
+                        <button type="submit">Save Changes</button>
+                        <button type="button" id="cancel-update">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
             <h3>Your Task List</h3> <!--Where the tasks list will be displayed.-->
             <div id="task-list"></div>
         </div>
