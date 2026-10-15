@@ -1,7 +1,7 @@
-# Full-Stack Task Management API and App
+# 🎆 Full-Stack Task Management API and App
 A full stack task manager project with a web page and server, featuring CRUD operations for tasks, JWT authentication, username case insensitivity for login/registration and password cryptography.
 
-## Tech Stack
+## 📚 Tech Stack
 Backend - JavaScript for server scripting.
 
 Database - PostgreSQL, use to maintain a relationship between users, their tasks and tasks' statuses.
@@ -18,7 +18,7 @@ Express.js npm package - made handling server side scripting easier .
 
 CORS npm package - to allow for cross origin request on the frontend.
 
-##  Core Features
+## 💽 Core Features
 User Login, Registration and Logout - Users have to make an account and then login with those credentials to access task CRUD features. Users can also logout after logging in.
 
 CRUD Features for tasks - Allows for users to make, update and delete tasks. These actions are saved in a database, allowing for these actions to be read and shown to a user on the webpage as well. These changes are also maintained even after a user logs out and logs in later.
@@ -59,7 +59,7 @@ Create a \`.env\` file in the root directory of your backend server and add your
     DB_PORT=5432
     DB_NAME=task_manager_db
 
-### 3. 📚 Set Up the PostgreSQL Database
+### 3. 🧮 Set Up the PostgreSQL Database
 1. Open pgAdmin or your preferred PostgreSQL terminal client.
 2. Create a new database named \`task_manager_db\`:
 
